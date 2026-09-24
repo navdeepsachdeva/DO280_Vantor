@@ -1,0 +1,13 @@
+apiVersion: k8s.ovn.org/v1
+kind: UserDefinedNetwork
+metadata:
+  name: primary-udn
+  namespace: pp2
+spec:
+  layer2:
+    ipam:
+      lifecycle: Persistent
+    role: Primary
+    subnets:
+    - 20.0.0.0/16
+  topology: Layer2

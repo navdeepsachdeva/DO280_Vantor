@@ -1,0 +1,47 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: p1
+  labels:
+    k8s.ovn.org/primary-user-defined-network: ""
+    env: test
+spec: {}
+status: {}
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: p2
+  labels:
+    k8s.ovn.org/primary-user-defined-network: ""
+    env: test
+spec: {}
+status: {}
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: p3
+  labels:
+    k8s.ovn.org/primary-user-defined-network: ""
+    env: test
+spec: {}
+status: {}
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: p4
+  labels:
+    k8s.ovn.org/primary-user-defined-network: ""
+    env: test
+spec: {}
+status: {}

@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: borrow-image
+  namespace: jproject2
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: system:image-puller
+  namespace: jproject1
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:image-puller
+subjects:
+- kind: ServiceAccount
+  name: borrow-image
+  namespace: jproject2
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: borrow-app
+  name: borrow-app
+  namespace: jproject2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: borrow-app
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: borrow-app
+    spec:
+      serviceAccountName: borrow-image
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/jproject1/webapp:latest
+        name: webapp
+        resources: {}
+status: {}

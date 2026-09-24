@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vantor-app
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      you: me
+ 
+  template:
+    metadata:
+      labels:
+        you: me
+    spec:
+      containers:
+        - name: web
+          image: {{ .Values.webimage.repository }}:{{ .Values.webimage.tag }}
+          ports:
+          - containerPort: {{ .Values.webimage.port }}
+ 
+        - name: db
+          image: {{ .Values.dbimage.repository }}:{{ .Values.dbimage.tag }}
+          ports:
+            - containerPort: {{ .Values.dbimage.port }}
+          env:
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: cm-vantor
+                  key: user
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: cm-vantor
+                  key: database
+ 
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sec-vantor
+                  key: password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sec-vantor
+                  key: root_password

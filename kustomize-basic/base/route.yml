@@ -1,0 +1,13 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: vantor-app
+spec:
+  port:
+    targetPort: 8080
+  to:
+    kind: ""
+    name: vantor-app
+    weight: null
+status: {}

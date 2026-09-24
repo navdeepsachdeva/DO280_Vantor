@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vantor-app
+spec:
+  replicas: 2
+  # selector:
+  #   matchLabels:
+  #     you: me
+  template:
+    metadata:
+      labels:
+        you: me
+    spec:
+      containers:
+        - name: db
+          image: registry.fedoraproject.org/f32/mysql
+          resources:
+            requests:
+              cpu: 10m
+              memory: 20M
+            limits:
+              cpu: 15m
+              memory: 30M

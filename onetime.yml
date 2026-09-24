@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: onetime
+spec:
+  template:
+    metadata: {}
+    spec:
+      containers:
+      - command:
+        - date
+        - +%D-%X
+        image: registry.access.redhat.com/ubi9/httpd-24
+        name: onetime
+        resources: {}
+      restartPolicy: Never
+status: {}
+# oc create job onetime  --image=registry.access.redhat.com/ubi9/httpd-24 --dry-run=client -o yaml -- date +%D-%X  > onetime.yml

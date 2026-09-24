@@ -1,0 +1,137 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: project-request
+objects:
+- apiVersion: project.openshift.io/v1
+  kind: Project
+  metadata:
+    annotations:
+      openshift.io/description: ${PROJECT_DESCRIPTION}
+      openshift.io/display-name: ${PROJECT_DISPLAYNAME}
+      openshift.io/requester: ${PROJECT_REQUESTING_USER}
+    name: ${PROJECT_NAME}
+  spec: {}
+  status: {}
+
+# - apiVersion: v1
+#   kind: ResourceQuota
+#   metadata:
+#     name: ${PROJECT_NAME}-compute-quota
+#   spec:
+#     hard:
+#       limits.cpu: 200m
+#       limits.memory: 200M
+#       memory: 100M
+#       requests.cpu: 100m
+#   status: {}
+
+
+- apiVersion: v1
+  kind: ResourceQuota
+  metadata:
+    name: ${PROJECT_NAME}-count-quota
+  spec:
+    hard:
+      count/configmaps: "8"
+      count/deployments.apps: "2"
+      count/pods: "6"
+      count/routes.route.openshift.io: "2"
+      count/secrets: "8"
+      count/services: "2"
+  status: {}
+
+
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: ${PROJECT_NAME}-cm
+  data:
+    database: vantor
+    user: james
+ 
+# - apiVersion: v1
+#   kind: Secret
+#   metadata:
+#     name: ${PROJECT_NAME}-secret
+#   data:
+#     password: bXlwYTU1
+#     root_password: cjAwdHBhNTU=
+
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    labels:
+      you: me
+    name: ${PROJECT_NAME}-pod
+    namespace: ${PROJECT_NAME}
+  spec:
+    containers:
+      - name: web
+        image: registry.access.redhat.com/ubi9/httpd-24:latest
+        resources:
+          requests:
+            cpu: 10m
+            memory: 20Mi
+          limits:
+            cpu: 20m
+            memory: 40Mi
+
+        ports:
+          - containerPort: 8080
+            protocol: TCP
+          - containerPort: 8443
+
+- apiVersion: "v1"
+  kind: "LimitRange"
+  metadata:
+    name: "dev-limits"
+  spec:    
+    limits:
+      - type: "Pod"
+        max:
+          cpu: "40m"
+          memory: "100Mi"
+        min:
+          cpu: "10m"
+          memory: "20Mi"
+           
+      - type: "Container"
+        max:
+          cpu: "20m"
+          memory: "50Mi"
+        min:
+          cpu: "10m"
+          memory: "20Mi"
+        default:
+          cpu: "10m"
+          memory: "20Mi"
+        defaultRequest:
+          cpu: "10m"
+          memory: "20Mi"
+
+
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: ${PROJECT_NAME}-sa
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: admin
+    namespace: ${PROJECT_NAME}
+  roleRef:
+    apiGroup: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: admin
+  subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: ${PROJECT_ADMIN_USER}
+parameters:
+- name: PROJECT_NAME
+- name: PROJECT_DISPLAYNAME
+- name: PROJECT_DESCRIPTION
+- name: PROJECT_ADMIN_USER
+- name: PROJECT_REQUESTING_USER

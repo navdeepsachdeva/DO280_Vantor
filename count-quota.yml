@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: count-quota
+spec:
+  hard:
+    count/configmaps: "2"
+    count/deployments.apps: "2"
+    count/pods: "6"
+    count/routes.route.openshift.io: "2"
+    count/secrets: "4"
+    count/services: "2"
+status: {}

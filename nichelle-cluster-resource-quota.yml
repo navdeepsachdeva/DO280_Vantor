@@ -1,0 +1,20 @@
+apiVersion: quota.openshift.io/v1
+kind: ClusterResourceQuota
+metadata:
+  name: nicelle-quota
+spec:
+  quota:
+    hard:
+      count/configmaps: "2"
+      count/deployments.apps: "2"
+      count/pods: "6"
+      count/routes.route.openshift.io: "2"
+      count/secrets: "4"
+      count/services: "2"
+  selector:
+    annotations:
+      openshift.io/requester: nicelle
+    labels: null
+status:
+  namespaces: null
+  total: {}

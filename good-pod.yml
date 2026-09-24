@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    you: me
+  name: good-pod
+spec:
+  containers:
+    - name: web
+      imagePullPolicy: IfNotPresent
+      image: registry.access.redhat.com/ubi9/httpd-24:latest
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443

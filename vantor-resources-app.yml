@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vantor-app
+spec:
+  # ReplicaSet
+  replicas: 1
+  selector:
+    matchLabels:
+      you: me
+
+  # Pod Format
+  template:
+    metadata:
+      labels:
+        you: me
+    spec:
+      containers:
+        - image: registry.access.redhat.com/ubi9/httpd-24
+          name: web
+          ports:
+          - containerPort: 8080
+          resources:
+            requests:
+              cpu: 10m
+              memory: 20Mi
+        - name: db
+          image: docker.io/library/mysql
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_USER
+              value: james
+            - name: MYSQL_DATABASE
+              value: vantor
+            - name: MYSQL_PASSWORD
+              value: mypa55
+            - name: MYSQL_ROOT_PASSWORD
+              value: r00tpa55
+          resources:
+            requests:
+              cpu: 10m
+              memory: 20Mi

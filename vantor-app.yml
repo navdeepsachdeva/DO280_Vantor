@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vantor-app
+spec:
+  # ReplicaSet
+  replicas: 4
+  selector:
+    matchLabels:
+      you: me
+
+  # Pod Format
+  template:
+    metadata:
+      labels:
+        you: me
+    spec:
+      containers:
+      - image: registry.access.redhat.com/ubi9/httpd-24
+        name: web
+        ports:
+        - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vantor-app
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    you: me
+status:
+  loadBalancer: {}
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: vantor-app
+spec:
+  port:
+    targetPort: 8080
+  to:
+    kind: ""
+    name: vantor-app
+    weight: null
+status: {}
+
+# oc expose deployment vantor-app --dry-run=client -o yaml
+# oc expose service  vantor-app --dry-run=client -o yaml

@@ -1,0 +1,50 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  creationTimestamp: null
+  name: project6
+  labels:
+    k8s.ovn.org/primary-user-defined-network: ""
+spec: {}
+status: {}
+
+
+
+---
+apiVersion: k8s.ovn.org/v1
+kind: UserDefinedNetwork
+metadata:
+  name: primary-udn
+  namespace: project6
+spec:
+  layer2:
+    ipam:
+      lifecycle: Persistent
+    role: Primary
+    subnets:
+    - 22.0.0.0/16
+  topology: Layer2
+
+
+---
+apiVersion: k8s.ovn.org/v1
+kind: UserDefinedNetwork
+metadata:
+  name: secondry-udn
+  namespace: project6
+spec:
+  layer2:
+    ipam:
+      lifecycle: Persistent
+    role: Secondary
+    subnets:
+    - 25.0.0.0/16
+  topology: Layer2
+
+# In Deployment edit pod definitions
+#   template:
+#     metadata:
+#       annotations:
+#         k8s.v1.cni.cncf.io/networks: secondry-udn
+

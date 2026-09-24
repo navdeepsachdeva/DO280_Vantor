@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vantor-app
+  namespace: p1
+spec:
+  # ReplicaSet
+  replicas: 1
+  selector:
+    matchLabels:
+      you: me
+ 
+  # Pod Format
+  template:
+    metadata:
+      labels:
+        you: me
+    spec:
+      containers:
+        - name: web
+          image: registry.access.redhat.com/ubi9/httpd-24
+          ports:
+          - containerPort: 8080
+ 
+        - name: db
+          image: registry.fedoraproject.org/f32/mysql
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: cm-vantor
+                  key: user
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: cm-vantor
+                  key: database
+ 
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sec-vantor
+                  key: password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sec-vantor
+                  key: root_password

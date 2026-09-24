@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    you: me
+  name: carl
+  # namespace: p1
+spec:
+  containers:
+    - name: web
+      image: registry.access.redhat.com/ubi9/httpd-24:latest
+      ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+    - name: db
+      image: docker.io/library/mysql
+      ports:
+        - containerPort: 3306
+      env:
+        - name: MYSQL_USER
+          value: james
+        - name: MYSQL_DATABASE
+          value: vantor
+        - name: MYSQL_PASSWORD
+          value: mypa55
+        - name: MYSQL_ROOT_PASSWORD
+          value: r00tpa55

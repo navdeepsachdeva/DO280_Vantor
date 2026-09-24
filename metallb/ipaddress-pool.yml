@@ -1,0 +1,10 @@
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  namespace: metallb-system
+  name: doc-example
+  labels: 
+    zone: east
+spec:
+  addresses:
+  - 192.168.110.1-192.168.110.10
